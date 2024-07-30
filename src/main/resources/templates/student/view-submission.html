@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TQBEdu | Kết quả</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/style-student.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <!--Sidebar-->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/profile}" method="get">
+                <li><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
+            </form>
+            <form th:action="@{/student/classroom/classrooms-page?}" method="get">
+                <li><button><i class='bx bx-book-reader'></i>Xem các lớp học</button></li>
+            </form>
+            <form th:action="@{/student/exam/training}" method="get">
+                <li class="active"><button><i class='bx bx-folder'></i>Xem các đề thi tự luyện</button></li>
+            </form>
+            <li><button><i class='bx bx-cog'></i>Cài đặt </button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
+        </ul>
+    </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main>
+            <form th:action="@{/student/exam/submission/all-submission}" method="get">
+                <input type="hidden" id="examId" name="examId" th:value="${examId}" />
+                <input type="submit" value="Các lần nộp bài" class="back-button" />
+            </form>
+
+            <header>
+                <h1>Kết quả bài làm</h1>
+            </header>
+
+            <div>
+                <section>
+                    <h2>Thông tin bài nộp:</h2>
+                    <table class="result-assignment-table" style="width: 70%; margin-left: 0px">
+                        <tr>
+                            <td class="sample-column"><strong>Điểm số</strong></td>
+                            <td><span th:text="${submission.score} + ' / 10'"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="sample-column"><strong>Thời gian bắt đầu</strong></td>
+                            <td><span th:text="${startedTime}"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="sample-column"><strong>Thời gian nộp bài</strong></td>
+                            <td><span th:text="${submittedTime}"></span></td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <h2>Chi tiết câu hỏi</h2>
+                    <ul>
+                        <li th:each="question, questionIndex : ${questions}" class="a-question">
+                            <p><strong th:text="'Câu ' + (${questionIndex.index + 1}) + ': '"></strong>
+                                <span th:text="${question.text}" class="text-question"></span>
+                            </p>
+                            <p><strong>Đáp án của bạn:</strong> <span
+                                    th:text="${choices.get(questionIndex.index)}"></span>
+                                <span th:if="${isCorrect.get(questionIndex.index) == 1}" class="correct-answer">✓</span>
+                                <span th:if="${isCorrect.get(questionIndex.index) == 0}"
+                                    class="incorrect-answer">✗</span>
+                            </p>
+                            <p><strong>Đáp án đúng:</strong> <span th:text="${question.answer}"></span></p>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/index.js"></script>
+</body>
+
+</html>

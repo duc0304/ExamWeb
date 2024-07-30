@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TQBEdu | Danh sách bài tập</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/style3.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+
+<body>
+    <!--Sidebar-->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard' ></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/profile}" method="get">
+                <li><button><i class='bx bx-user-circle' ></i>Xem hồ sơ</button></li>
+            </form>
+            <form th:action="@{/teacher/classroom/classrooms-page?}" method="get">
+                <li class="active"><button><i class='bx bx-book-reader'></i>Xem các lớp học</button></li>
+            </form>
+            <form th:action="@{/teacher/exam/create-exam-page}" method="get">
+                <li><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
+            </form>
+            <form th:action="@{/teacher/exam/view-exams-by-filter-page}" method="get">
+                <li><button><i class='bx bx-folder'></i>Xem các đề thi</button></li>
+            </form>
+            <li><button><i class='bx bx-cog' ></i>Cài đặt</button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out' ></i>Đăng xuất</button></li>
+            </form>
+        </ul>
+    </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu' ></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
+            </a>
+        </nav>
+         <!-- End of Navbar -->
+         <main>
+            <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                <p th:text="${message}"></p>
+            </div>
+        
+            <form th:action="@{view-classroom}" method="get">
+                <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+                <h2><input type="submit" value="Quay lại trang trước" class="back-button" /></h2>
+            </form>
+        
+            <h1 style="text-align: left;" th:text="'Lớp: ' + ${className}"></h1>
+            <h2>Danh sách bài tập:</h2>
+            <ul id="assignmentList">
+                <li th:each="assignment : ${assignments}">
+                    <form th:action="@{assignment/view-assignment}" method="get" style="display: inline;" class="tuongtac2">
+                        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+                        <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}" />
+                        <button style=" width: 30%;" type="submit" th:text="${assignment.name}"></button>
+                    </form><br>
+                </li>
+            </ul>
+        
+            <form th:action="@{assignment/add-assignment-page}" method="get" style="display: flex;" class="tuongtac1">
+                <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+                <button type="submit">Thêm bài tập</button>
+            </form>
+        
+            <script>
+                document.querySelectorAll(".viewAssignmentButton").forEach(function (button) {
+                    button.addEventListener("click", function () {
+                        var assignmentUrl = this.getAttribute("data-assignment-url");
+                        window.open(assignmentUrl, '_blank');
+                    });
+                });
+            </script>
+
+            <style>
+                .redirect-button {
+                    display: inline-block;
+                    padding: 5px 10px;
+                    font-size: 14px;
+                    background-color: #000000;
+                    color: #fff;
+                    text-decoration: none;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+            </style>
+         </main>
+    </div>
+    <script src="/css/index.js"></script>
+</body>
+</html>

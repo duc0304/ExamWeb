@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>TQBEdu | Hồ sơ cá nhân</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/profile.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+
+<body>
+    <!--Sidebar-->
+    <div th:if="${user.role == 'Teacher'}" class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/profile}" method="get">
+                <li class="active"><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
+            </form>
+            <form th:action="@{/teacher/classroom/classrooms-page?}" method="get">
+                <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+            </form>
+            <form th:action="@{/teacher/exam/create-exam-page}" method="get">
+                <li><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
+            </form>
+            <form th:action="@{/teacher/exam/view-exams-by-filter-page}" method="get">
+                <li><button><i class='bx bx-folder'></i>Xem các đề thi</button></li>
+            </form>
+            <li><button><i class='bx bx-cog'></i>Cài đặt</button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
+
+        </ul>
+    </div>
+
+    <div th:if="${user.role == 'Student'}" class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/profile}" method="get">
+                <li class="active"><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
+            </form>
+            <form th:action="@{/student/classroom/classrooms-page?}" method="get">
+                <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+            </form>
+            <form th:action="@{/student/exam/training}" method="get">
+                <li><button><i class='bx bx-folder'></i>Xem các đề thi tự luyện</button></li>
+            </form>
+            <li><button><i class='bx bx-cog'></i>Cài đặt </button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
+        </ul>
+    </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${user.avatarFileName}}">
+                    </button>
+                </form>
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main style=" margin: 30px 20px;">
+            <div>
+                <form th:action="@{/back-to-dashboard}" method="get">
+                    <h2><input type="submit" value="Quay lại trang trước" class="back-button" /></h2>
+                </form><br>
+                <div class="profile-ui">
+                    <div class="profile-setting">
+                        <ul class="profile-choice">
+                            <form th:action="@{profile/edit}" method="get">
+                                <li><button><i class='bx bx-user'></i>Thay đổi thông tin cá nhân</button></li>
+                            </form>
+                            <form th:action="@{change-password-page}" method="get">
+                                <li><button><i class='bx bx-lock'></i>Đổi mật khẩu</button></li>
+                            </form>
+                        </ul>
+                    </div>
+                    <div class="profile-information">
+                        <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                            <p th:text="${message}"></p>
+                        </div>
+                        <h2>Hồ sơ người dùng</h2>
+                        <div style="align-items: center; padding: 10px; margin-left: 40%;">
+                            <img style=" border-radius: 50%; width: 150px; height: 150px;"
+                                th:src="@{'/uploads/' + ${user.avatarFileName}}" width="270" height="250" />
+                        </div><br>
+                        <div style="display: flex;">
+                            <div style="width: 50%; padding: 8px;">
+                                <div style="margin-bottom: 5px;">
+                                    <label for="username" style="font-weight: 500;">Tên đăng nhập:</label>
+                                </div>
+                                <button style="border-radius: 5px;"><span th:text="${user.username}"></span></button>
+                            </div>
+                            <div style="width: 50%; padding: 8px;">
+                                <div style="margin-bottom: 5px;">
+                                    <label for="name" style="font-weight: 500;">Họ và tên:</label>
+                                </div>
+                                <button style="border-radius: 5px;"><span th:text="${user.name}"></span></button>
+                            </div>
+                        </div>
+                        <div style="display: flex;">
+                            <div style="width: 50%; padding: 8px;">
+                                <div style="margin-bottom: 5px;">
+                                    <label for="username" style="font-weight: 500;">Giới tính:</label>
+                                </div>
+                                <button style="border-radius: 5px;"><span th:text="${user.gender}"></span></button>
+                            </div>
+                            <div style="width: 50%; padding: 8px;">
+                                <div style="margin-bottom: 5px;">
+                                    <label for="name" style="font-weight: 500;">Ngày sinh:</label>
+                                </div>
+                                <button style="border-radius: 5px;"><span th:text="${user.dob}"></span></button>
+                            </div>
+                        </div>
+                        <div style="width: 50%; padding: 8px;">
+                            <div style="margin-bottom: 5px;">
+                                <label for="name" style="font-weight: 500;">Email:</label>
+                            </div>
+                            <button><span th:text="${user.email}"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script th:inline="javascript">
+
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000);
+
+        // window.onload = function () {
+        //    setTimeout(function () {
+        //        if (!window.location.hash) {
+        //            window.location = window.location + '#reloaded';
+        //            window.location.reload();
+        //        }
+        //    }, 500);
+        //};
+        if (window.location.hash == "#reloaded") {
+            var hashValue = window.location.hash;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/api/v1/FileUpload/reloadPageForImageAppear?hash=' + encodeURIComponent(hashValue), true);
+            xhr.send();
+            setTimeout(function () {
+                var messageDiv = document.getElementById("messageDiv");
+                if (messageDiv) {
+                    messageDiv.style.display = "none";
+                }
+            }, 2000);
+        }
+    </script>
+
+    <script src="/js/index.js"></script>
+
+</body>
+
+</html>

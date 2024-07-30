@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TQBEdu | Các lớp học</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/style3.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <!--Sidebar-->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/profile}" method="get">
+                <li><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
+            </form>
+            <form th:action="@{/teacher/classroom/classrooms-page?}" method="get">
+                <li class="active"><button><i class='bx bx-book-reader'></i>Xem các lớp học</button></li>
+            </form>
+            <form th:action="@{/teacher/exam/create-exam-page}" method="get">
+                <li><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
+            </form>
+            <form th:action="@{/teacher/exam/view-exams-by-filter-page}" method="get">
+                <li><button><i class='bx bx-folder'></i>Xem các đề thi</button></li>
+            </form>
+            <li><button><i class='bx bx-cog'></i>Cài đặt</button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
+        </ul>
+    </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main>
+            <div>
+                <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                    <p th:text="${message}"></p>
+                </div>
+
+                <form th:action="@{/back-to-dashboard}" method="get">
+                    <h2><input type="submit" value="Quay lại trang trước" class="back-button" /></h2>
+                </form>
+
+                <h1 style="text-align: left;">Quản lý lớp học</h1>
+
+                <h2 th:text="'Các lớp hiện tại: '"></h2>
+
+                <div th:if="${classNames}">
+                    <div th:unless="${classNames.size()>0}">Danh sách lớp trống</div>
+                    <ul>
+                        <li th:each="className, classNameIndex : ${classNames}">
+                            <div>
+                                <form action="view-classroom" method="get" style="display: inline;" class="tuongtac">
+                                    <input type="hidden" th:id="classCode" th:name="classCode"
+                                        th:value="${classCodes.get(classNameIndex.index)}">
+                                    <button style="width: 30%;" type="submit" th:text="${className}"></button>
+                                </form>
+                            </div><br>
+                        </li>
+                    </ul>
+                </div>
+
+                <br>
+                <form th:action="@{create-classroom-page}" method="get" class="tuongtac1">
+                    <button type="submit">Tạo lớp học mới</button>
+                </form>
+
+            </div>
+        </main>
+    </div>
+    <script src="/js/index.js"></script>
+</body>
+
+</html>

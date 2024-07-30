@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+input.dangky {
+    all: unset;
+    padding: 9px 0 7px 8px;
+    border: 1px solid rgb(219, 219, 219);
+    margin-top: 10px;
+    background-color: white;
+    font-size: 14px;
+    border-radius: 5px;
+    padding: 15px;
+    width: 93%;
+}
+
+a {
+    text-decoration: none;
+}
+
+img {
+    height: 100%;
+    top: -7px;
+}
+
+/* Styles for the custom select */
+.custom-select {
+    margin-left: 10px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 3px 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Styles when the select is hovered */
+.custom-select:hover {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Styles when the select is focused */
+.custom-select:focus {
+    outline: none;
+    border-color: #000000;
+    /* Example focused color */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    /* Example box shadow */
+}

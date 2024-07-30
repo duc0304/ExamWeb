@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:debug="true" lang="en">
+
+<head>
+    <title>TQBEdu | Làm bài tập</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/style-student.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <!--Sidebar-->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/profile}" method="get">
+                <li><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
+            </form>
+            <form th:action="@{/student/classroom/classrooms-page?}" method="get">
+                <li class="active"><button><i class='bx bx-book-reader'></i>Xem các lớp học</button></li>
+            </form>
+            <form th:action="@{/student/exam/training}" method="get">
+                <li><button><i class='bx bx-folder'></i>Xem các đề thi tự luyện</button></li>
+            </form>
+            <li><button><i class='bx bx-cog'></i>Cài đặt </button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
+        </ul>
+    </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main>
+            <div class="group-class-clock">
+                <h1 class="class-do-assignment">Lớp: <span th:text=" ${className}"></span></h1>
+                <div class="countdown-clock" style="margin-right: 100px;">
+                    <div class="time-block">
+                        <span class="time" id="hour">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class="label">Giờ</span>
+                    </div>
+                    <div class="time-block">
+                        <span class="time" id="min">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class="label">Phút</span>
+                    </div>
+                    <div class="time-block">
+                        <span class="time" id="sec">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class="label">Giây</span>
+                    </div>
+                </div>
+            </div>
+
+            <h1 class="title-assignment">Bài tập: <span th:text="${assignmentName}"></span></h1>
+
+
+            <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                <p th:text="${message}"></p>
+            </div>
+
+            <ul class="group-ul question-list">
+                <li th:each="question, questionIndex : ${exam.questions}" class="a-question"
+                    style="background-color: #e6f1f5;">
+                    <p th:text="'Câu ' + (${questionIndex.index + 1}) + ': ' + ${question.text}" class="text-question">
+                    </p>
+                    <div th:if="${question.questionType == 'type-in'}">
+                        <input class="questionInput" th:id="'TypeInInput'+${questionIndex.index}" th:type="text">
+                        <button class="savingButton" th:id="'saveTypeInAnswer'+${questionIndex.index}">Lưu</button>
+                        <span style="color: green; display: none;" th:id="'savedStatus'+${questionIndex.index}">Đã
+                            lưu</span>
+                    </div>
+                    <ul th:if="${question.questionType == 'ranking'}" class="group-ul answer-list">
+                        <li th:each="choice, choiceIndex : ${question.choices}">
+                            <button class="rankingButton" th:text="' ' + ${choice}"
+                                th:id="'rankingButton'+${questionIndex.index}"></button>
+                        </li>
+                        <button class="savingButton" th:id="'saveRankingAnswer'+${questionIndex.index}">Lưu</button>
+                        <span style="color: green; display: none;" th:id="'savedStatus'+${questionIndex.index}">Đã
+                            lưu</span>
+                    </ul>
+                    <ul th:if="${question.questionType == 'multiple-choice'}" class="group-ul answer-list">
+                        <li th:each="choice, choiceIndex : ${question.choices}" class="a-answer">
+                            <input class="selectionBox" th:type="${question.answer.size() > 1 ? 'checkbox' : 'radio'}"
+                                th:name="'selectedChoice' + ${questionIndex.index}" th:value="${choice}"
+                                th:id="'choiceButton'+${questionIndex.index}" />
+                            <span th:text="${choice}"></span>
+                        </li>
+                        <br>
+                        <button class="savingButton"
+                            th:id="'saveMultipleChoiceAnswer'+${questionIndex.index}">Lưu</button>
+                        <span style="color: green; display: none;" th:id="'savedStatus'+${questionIndex.index}">Đã
+                            lưu</span>
+                    </ul>
+                </li>
+            </ul>
+
+            <button id="submitButton">Nộp bài</button>
+
+        </main>
+    </div>
+    <script src="/js/index.js"></script>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("LOADED");
+            let myChoices = [];
+
+            const nQuestion = /*[[${exam.questions.size()}]]*/ 0;
+
+            var choices = /*[[${choices}]]*/[];
+
+            var questions = /*[[${exam.questions}]]*/[];
+
+            loadSelection();
+
+            function loadSelection() {
+                for (let i = 0; i < nQuestion; i++) {
+                    var selections = choices[i].selections;
+                    console.log(selections);
+                    if (selections == null)
+                        myChoices.push([]);
+                    else
+                        myChoices.push(selections);
+                    if (questions[i].questionType == "ranking") {
+                        let str = 'rankingButton' + i;
+                        var rankingButtons = document.querySelectorAll('button[id="' + str + '"]');
+                        rankingButtons.forEach(function (button) {
+                            for (let j = 0; j < myChoices[i].length; j++) {
+                                if (button.textContent.substring(1) == myChoices[i][j]) {
+                                    button.textContent = button.textContent + '   (' + (j + 1) + ')';
+                                    button.className = "selectedRankingButton";
+                                    button.setAttribute('selected', 'true');
+                                }
+                            }
+                        });
+                    }
+                    if (questions[i].questionType == "multiple-choice") {
+                        let str = 'choiceButton' + i;
+                        var choiceCheckboxes = document.querySelectorAll('input[type="checkbox"][id="' + str + '"]');
+                        choiceCheckboxes.forEach(checkbox => {
+                            for (let j = 0; j < myChoices[i].length; j++) {
+                                if (checkbox.value == myChoices[i][j]) {
+                                    checkbox.checked = true;
+                                    break;
+                                }
+                            }
+                        });
+
+                        var choiceRadios = document.querySelectorAll('input[type="radio"][id="' + str + '"]');
+                        console.log(choiceRadios);
+                        choiceRadios.forEach(radio => {
+                            for (let j = 0; j < myChoices[i].length; j++) {
+                                if (radio.value == myChoices[i][j]) {
+                                    radio.checked = true;
+                                    break;
+                                }
+                            }
+                        });
+                    }
+                    if (questions[i].questionType == "type-in") {
+                        let str = 'TypeInInput' + i;
+                        var typeInInput = document.getElementById(str);
+                        console.log(typeInInput.value);
+                        if (myChoices[i].length > 0) {
+                            typeInInput.value = myChoices[i][0];
+                            console.log(typeInInput.value);
+                        }
+                    }
+                }
+            }
+            console.log(myChoices);
+
+            setupButton();
+            function setupButton() {
+
+                var submitButton = document.getElementById('submitButton');
+                submitButton.addEventListener('click', function () {
+                    SubmitAnswer(false);
+                });
+
+                for (let i = 0; i < nQuestion; i++) {
+                    if (questions[i].questionType == "ranking") {
+                        let str = 'rankingButton' + i;
+                        var rankingButtons = document.querySelectorAll('button[id="' + str + '"]');
+                        rankingButtons.forEach(function (button) {
+                            button.addEventListener('click', function () {
+                                var selected = button.getAttribute('selected');
+                                if (selected != null && selected === 'true') {
+                                    var idx = button.textContent.charAt(button.textContent.length - 2);
+                                    button.className = "rankingButton";
+                                    myChoices[i].splice(idx - 1, 1);
+                                    console.log(myChoices[i]);
+                                    button.setAttribute('selected', 'false');
+                                    button.textContent = button.textContent.substring(0, button.textContent.length - 6);
+                                    changeRankingOrder(i, idx);
+                                }
+                                else if (selected == null || selected === 'false') {
+                                    button.className = "selectedRankingButton";
+                                    myChoices[i].push(button.textContent.substring(1));
+                                    console.log(myChoices[i]);
+                                    button.setAttribute('selected', 'true');
+                                    button.textContent = button.textContent + '   (' + myChoices[i].length + ')';
+                                }
+                            });
+                        });
+
+                        let str2 = 'saveRankingAnswer' + i;
+                        var saveButtons = document.querySelectorAll('button[id="' + str2 + '"]');
+                        saveButtons.forEach(function (button) {
+                            button.addEventListener('click', function () {
+                                let savedStatus = document.getElementById('savedStatus' + i);
+                                savedStatus.style.display = 'inline';
+                                setTimeout(function () {
+                                    savedStatus.style.display = 'none';
+                                }, 3000);
+
+                                SubmitRankingQuestion(i);
+                            });
+                        });
+                    }
+                    if (questions[i].questionType == "multiple-choice") {
+                        let str = 'choiceButton' + i;
+                        var choiceCheckboxes = document.querySelectorAll('input[type="checkbox"][id="' + str + '"]');
+                        choiceCheckboxes.forEach(function (checkbox) {
+                            checkbox.addEventListener('click', function () {
+                                console.log(checkbox.value);
+                                if (checkbox.checked) {
+                                    myChoices[i].push(checkbox.value);
+                                    console.log(myChoices[i]);
+                                }
+                                else {
+                                    for (let j = 0; j < myChoices[i].length; j++) {
+                                        if (myChoices[i][j] == checkbox.value) {
+                                            myChoices[i].splice(j, 1);
+                                            break;
+                                        }
+                                    }
+                                    console.log(myChoices[i]);
+                                }
+                            });
+                        });
+
+                        var choiceRadios = document.querySelectorAll('input[type="radio"][id="' + str + '"]');
+                        choiceRadios.forEach(function (radio) {
+                            radio.addEventListener('click', function () {
+                                console.log(radio.value);
+                                if (radio.checked) {
+                                    myChoices[i] = [radio.value];
+                                    console.log(myChoices[i]);
+                                }
+                                else {
+                                    for (let j = 0; j < myChoices[i].length; j++) {
+                                        if (myChoices[i][j] == radio.value) {
+                                            myChoices[i].splice(j, 1);
+                                            break;
+                                        }
+                                    }
+                                    console.log(myChoices[i]);
+                                }
+                            });
+                        });
+
+                        let str2 = 'saveMultipleChoiceAnswer' + i;
+                        var saveButtons = document.querySelectorAll('button[id="' + str2 + '"]');
+                        saveButtons.forEach(function (button) {
+                            button.addEventListener('click', function () {
+                                let savedStatus = document.getElementById('savedStatus' + i);
+                                savedStatus.style.display = 'inline';
+                                setTimeout(function () {
+                                    savedStatus.style.display = 'none';
+                                }, 3000);
+
+                                SubmitMultipleChoiceQuestion(i);
+                            });
+                        });
+                    }
+                    if (questions[i].questionType == "type-in") {
+                        let str2 = 'saveTypeInAnswer' + i;
+                        var saveButton = document.querySelector('button[id="' + str2 + '"]');
+                        saveButton.addEventListener('click', function () {
+                            let savedStatus = document.getElementById('savedStatus' + i);
+                            savedStatus.style.display = 'inline';
+                            setTimeout(function () {
+                                savedStatus.style.display = 'none';
+                            }, 3000);
+
+                            SubmitTypeInQuestion(i);
+                        });
+                    }
+                }
+            }
+
+            function changeRankingOrder(qidx, idx) {
+                let str = 'rankingButton' + qidx;
+                var buttons = document.querySelectorAll('button[id="' + str + '"]');
+                buttons.forEach(button => {
+                    var selected = button.getAttribute('selected');
+                    if (selected != null && selected === 'true') {
+                        var curIdx = button.textContent.charAt(button.textContent.length - 2);
+                        if (curIdx > idx) {
+                            button.textContent = button.textContent.substring(0, button.textContent.length - 6) + '   (' + (curIdx - 1) + ')';
+                        }
+                    }
+                });
+            }
+
+            // "17:31:00 11/25/2023"
+            var submissionEndTime = /*[[${endTime}]]*/ 0;
+            var endTime = new Date(submissionEndTime).getTime();
+            var x = setInterval(function () {
+                var now = new Date();
+                var currentTime = now.getTime();
+
+                var s, m, h;
+                var diff = endTime - currentTime;
+
+                s = Math.floor(diff / 1000);
+                m = Math.floor(s / 60);
+                h = Math.floor(m / 60);
+
+                s = s % 60;
+                m = m % 60;
+                h = h % 24;
+
+                if (diff < 0) {
+                    clearInterval(x);
+                    h = m = s = 0;
+                    SubmitAnswer(true);
+                }
+
+                h = (h < 10) ? "0" + h : h;
+                m = (m < 10) ? "0" + m : m;
+                s = (s < 10) ? "0" + s : s;
+
+                document.getElementById("hour").innerHTML = h;
+                document.getElementById("min").innerHTML = m;
+                document.getElementById("sec").innerHTML = s;
+
+                if (h == 0 && m < 5) {
+                    document.querySelector(".countdown-clock").style.background = "rgb(188, 188, 2)";
+                }
+                if (h == 0 && m < 2) {
+                    document.querySelector(".countdown-clock").style.background = "rgb(180, 8, 8)";
+                }
+            }, 1000);
+
+            var submissionId = /*[[${submissionId}]]*/ 0;
+
+            function SubmitRankingQuestion(questionIndex) {
+
+                console.log(questionIndex);
+
+                var choicesJsonString = JSON.stringify(myChoices[questionIndex]);
+
+                var url = '/api/submission/submit-ranking-question?' +
+                    'questionIndex=' + questionIndex +
+                    '&submissionId=' + encodeURIComponent(submissionId) +
+                    '&choicesJsonString=' + encodeURIComponent(choicesJsonString);
+
+                fetch(url, {
+                    method: 'POST',
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Submit successful');
+                        } else {
+                            console.error('Submit failed');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('An error occurred:', error);
+                    });
+            }
+
+            function SubmitTypeInQuestion(questionIndex) {
+
+                console.log(questionIndex);
+
+                var str = "TypeInInput" + questionIndex;
+                var TypeInInput = document.querySelector('input[type="text"][id="' + str + '"]');
+                console.log(TypeInInput.value);
+
+                var url = '/api/submission/submit-type-in-question?' +
+                    'questionIndex=' + questionIndex +
+                    '&submissionId=' + encodeURIComponent(submissionId) +
+                    '&typeInInput=' + TypeInInput.value;
+
+                fetch(url, {
+                    method: 'POST',
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Submit successful');
+                        } else {
+                            console.error('Submit failed');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('An error occurred:', error);
+                    });
+            }
+
+            function SubmitMultipleChoiceQuestion(questionIndex) {
+
+                console.log(questionIndex);
+
+                var choicesJsonString = JSON.stringify(myChoices[questionIndex]);
+
+                var url = '/api/submission/submit-multiple-choice-question?' +
+                    'questionIndex=' + questionIndex +
+                    '&submissionId=' + encodeURIComponent(submissionId) +
+                    '&choicesJsonString=' + encodeURIComponent(choicesJsonString);
+
+                fetch(url, {
+                    method: 'POST',
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Submit successful');
+                        } else {
+                            console.error('Submit failed');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('An error occurred:', error);
+                    });
+            }
+
+            function SubmitAnswer(timeout) {
+
+                console.log(timeout);
+
+                if (timeout != true)
+                    if (!confirm("Bạn có chắc chắn muốn nộp bài?"))
+                        return;
+
+                // Construct the URL with query parameters
+                var url = '/api/submission/submit-assignment?' +
+                    '&submissionId=' + encodeURIComponent(submissionId);
+
+                // Send the POST request
+                fetch(url, {
+                    method: 'POST',
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Check the response text
+                            response.text().then(text => {
+                                if (text === 'OK') {
+                                    window.location.href = '/student/classroom/assignment/result?submissionId=' + submissionId;
+                                } else {
+                                    console.log('Response is not "OK":', text);
+                                }
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        // Handle fetch error if needed
+                        console.error('An error occurred:', error);
+                    });
+            }
+
+            setTimeout(function () {
+                var messageDiv = document.getElementById("messageDiv");
+                if (messageDiv) {
+                    messageDiv.style.display = "none";
+                }
+            }, 2000); // message disapear after 2s
+        });
+    </script>
+</body>
+
+</html>

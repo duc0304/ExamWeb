@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TQBEdu | Tạo đề thi</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/profile.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Latest compiled and minified CSS -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script> -->
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!--Sidebar-->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/profile}" method="get">
+                <li><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
+            </form>
+            <form th:action="@{/teacher/classroom/classrooms-page?}" method="get">
+                <li><button><i class='bx bx-book-reader'></i>Xem các lớp học</button></li>
+            </form>
+            <form th:action="@{/teacher/exam/create-exam-page}" method="get">
+                <li class="active"><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
+            </form>
+            <form th:action="@{/teacher/exam/view-exams-by-filter-page}" method="get">
+                <li><button><i class='bx bx-folder'></i>Xem các đề thi</button></li>
+            </form>
+            <li><button><i class='bx bx-cog'></i>Cài đặt</button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
+
+        </ul>
+    </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
+            </a>
+        </nav>
+
+        <main style="background-color: #f1f5f9;">
+            <div class="container-fluid" style=" margin: 30px 20px ; ">
+                <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                    <p th:text="${message}"></p>
+                </div>
+                <form th:action="@{select-subject-and-grade}" method="get">
+                    <button type="submit" class="back-button">Quay lại
+                        trang trước</button>
+                </form><br><br>
+                <div class="profile-ui">
+                    <div class="profile-setting" style="width: 26%;">
+                        <ul class="profile-choice">
+                            <form th:action="@{select-subject-and-grade}" method="get">
+                                <li><button style="background-color: #96120f; color: white;"><i class='bx bx-file'></i>
+                                        Tạo đề thi từ ngân hàng câu hỏi</button></li>
+                            </form>
+                            <form th:action="@{create-own-exam-page}" method="get">
+                                <li><button><i class='bx bx-file-blank'></i>Tự tạo đề thi</button></li>
+                            </form>
+                        </ul>
+                    </div>
+                    <div class="profile-information">
+                        <h2 style="color: #96120f;font-size: 30px; margin-right: 5%;">Tạo đề thi</h2><br>
+                        <form th:action="@{create-exam-from-bank}" method="post" class="tuongtac2">
+                            <input type="hidden" name="subject" th:value="${selectedSubject}">
+                            <input type="hidden" name="grade" th:value="${selectedGrade}">
+                            <div style="display: flex;">
+                                <div style="width: 50%; padding: 8px;">
+                                    <div style="margin-bottom: 5px;">
+                                        <h3 th:text="'Khối lớp: '+${selectedGrade}"></h3>
+                                    </div>
+                                    <div style="margin-bottom: 5px;">
+                                        <h3 th:text="'Môn học: '+${selectedSubject}"></h3>
+                                    </div>
+                                </div>
+                                <div style="width: 50%; padding: 8px;">
+                                    <h3 style="font-size: 22px; padding: 8px">Phân chia số câu:</h3>
+                                </div>
+                            </div>
+                            <div style="display: flex;">
+                                <div style="width: 50%; padding: 8px;">
+                                    <div style="margin-bottom: 5px;">
+                                        <label for="name" style="font-weight: 500;">Tên bộ đề:</label>
+                                    </div>
+                                    <div class="form-floating mb-5 mt-3">
+                                        <input type="text" class="form-control" id="name" name="name"
+                                            th:value="${typedName}" placeholder="Nhập tên bộ đề" required />
+                                    </div><br>
+                                    <div style="margin-bottom: 5px;">
+                                        <label for="amount" style="font-weight: 500;">Số đề muốn tạo:</label>
+                                    </div>
+                                    <div class="form-floating mb-5 mt-3">
+                                        <input type="number" class="form-control" id="amount" name="amount" th:value="1"
+                                            placeholder="Sample Class" required />
+                                    </div><br>
+                                    <label for="duration" style="font-weight: 500;">Thời gian làm bài:</label>
+                                    <div class="form-floating mb-5 mt-3">
+                                        <input type="number" class="form-control" id="duration" name="duration"
+                                            placeholder="Nhập số phút" required />
+                                    </div>
+                                </div>
+                                <div style="width: 50%; padding: 8px;">
+                                    <div class="col">
+
+                                        <div th:each="chapter, chapterIndex : ${chapters}">
+                                            <label style="font-weight: 500;"
+                                                th:text="${chapter} + '  (SL: ' + ${limit.get(chapterIndex.index)} + ' câu)'"></label>
+                                            <input type="number" id="questionCountForEachChapter"
+                                                name="questionCountForEachChapter" required th:value="0"
+                                                th:max="${limit.get(chapterIndex.index)}" th:min="0" />
+                                            <br><br>
+                                        </div><br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="taode" type="submit"
+                                    style="width: 68px; margin-left: 70%; text-align: center;">Tạo đề</button>
+                            </div><br><br>
+                        </form>
+                    </div>
+                </div>
+        </main>
+    </div>
+
+    <script>
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
+
+    <script src="/js/index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>TQBEdu | Đăng ký</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles1.css">
+</head>
+
+<body style="
+        background-color: rgb(241 245 249);
+        height: 100vh;
+        
+        ">
+
+    <form th:action="@{/}" method="get">
+        <input class="Back-homepage" type="submit" value="Quay về trang đăng nhập"
+            style="height: 40px; background-color: #96120f; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: 700; " />
+    </form>
+    <div style="
+            width: 100%;
+            align-items: center;
+            position: relative;
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            top: 40px;
+            ">
+        <div style="
+                display: flex;
+                align-content: center;
+                justify-content: center;
+                flex-wrap: nowrap;
+                align-items: stretch;
+                flex-direction: column;
+                background-color: white;
+                width: 460px;
+                background-position: center;
+                border-radius: 5px;
+                padding: 20px;
+                margin: 10px ;
+                margin-top: 0px;
+                box-shadow: 0 3px 20px #0000000b;">
+            <div style="width: 100%;height: 36px; padding: 10px;">
+                <img src="https://asso.hust.edu.vn/adfs/portal/logo/logo.png?id=A8E33BA95D4C63D8147636CEE88614D90A44EA48DD6B131351C1B97BA71F6E89"
+                    alt="">
+            </div>
+            <div style="
+                    color: black;
+                    font-size: 30px;
+                    text-align: center;
+                    font-weight: 700;
+                    margin-top: 0px;
+                    padding: 10px;
+                    align-items: center;
+                    ">Đăng ký tài khoản mới</div>
+
+            <div style="font-size: 15px; color: #96120f; font-weight: 500; " th:if="${message}" id="messageDiv"
+                class="alert alert-success">
+                <p th:text="${message}"></p>
+            </div>
+
+            <form style="padding: 10px;" action="/register" method="post">
+                <input class="dangky" type="text" id="username" name="username" placeholder="Tên đăng nhập" required />
+
+                <input class="dangky" type="email" id="email" name="email" placeholder="Email" required />
+
+                <input class="dangky" type="name" id="name" name="name" placeholder="Họ và tên" required /><br><br>
+
+
+                <label for="gender">Giới tính:</label>
+                <label for="male">
+                    <input type="radio" id="male" name="gender" value="Nam">
+                    Nam
+                </label>
+                <label for="female">
+                    <input type="radio" id="female" name="gender" value="Nữ">
+                    Nữ
+                </label>
+                <br><br>
+
+                <label for="dob">Ngày sinh:</label>
+                <input class="dangky" type="date" id="dob" name="dob" required><br>
+
+                <input class="dangky" type="password" id="password" name="password" placeholder="Mật khẩu" required />
+
+                <input class="dangky" type="password" id="confirmPassword" name="confirmPassword"
+                    placeholder="Nhập lại mật khẩu" required /><br><br>
+
+                <label for="role">Bạn là:</label>
+                <select id="role" name="role" class="custom-select">
+                    <option value="Student">Học sinh</option>
+                    <option value="Teacher">Giáo viên</option>
+                </select><br><br>
+
+                <button style="
+                        background-color: #96120f;
+                        width: 100%;
+                        text-align: center;
+                        color: white;
+                        border-radius: 5px;
+                        margin-top: 10px;
+                        padding: 12px;
+                        font-size: 15px;
+                        border: none;
+                        font-weight: 600;
+                        cursor: pointer;">
+                    Đăng ký
+                </button>
+            </form>
+            <div style="
+                    padding: 15px;
+                    width: 100%;
+                    position: relative;
+                    flex-direction: row;
+                    display: flex;
+                    margin-left: 127px;
+                    font-size: 16px;
+                    ">Đã có tài khoản?
+                <form action="/" method="get">
+                    <button style="
+                        background-color: white;
+                        border: none;
+                        cursor: pointer;
+                        color: #96120f;
+                        font-weight: 700;
+                        font-size: 14px;
+                        ">Đăng nhập</button>
+                </form>
+            </div>
+            <script>
+                setTimeout(function () {
+                    var messageDiv = document.getElementById("messageDiv");
+                    if (messageDiv) {
+                        messageDiv.style.display = "none";
+                    }
+                }, 4000); // message disapear after 2s
+            </script>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>TQBEdu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+
+
+    </style>
+</head>
+
+<body>
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+    <!--Sidebar-->
+
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <li class="active"><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            <form th:action="@{/admin/access/user-manager}" method="get">
+                <li type="submit"><button><i class='bx bx-user-check'></i>Quản lý người dùng</button></li>
+            </form>
+            <form th:action="@{questions/create-question-page}" method="get">
+                <li type="submit"><button><i class='bx bx-edit'></i>Ngân hàng câu hỏi</button></li>
+            </form>
+            <form th:action="@{exam/create-exam-page}" method="get">
+                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi tự do</button></li>
+            </form>
+            <form th:action="@{exam/view-exams-by-filter-page}" method="get">
+                <li type="submit"><button><i class='bx bx-data'></i>Xem các đề thi</button></li>
+            </form>
+            <li type="submit"><button><i class='bx bx-cog'></i>Cài đặt</button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button id="logoutButton" class="logout"><i
+                            class='bx bx-log-out'></i>Đăng xuất</button></li>
+            </form>
+        </ul>
+    </div>
+
+    <!-- End of Sidebar -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main style="padding: 30px;">
+            <div class="header">
+                <h1>Chào mừng bạn đến với TQBEdu</h1>
+            </div>
+            <div class="insights">
+                <li onclick="submitForm1()">
+                    <i class='bx bx-user-check bx-lg'></i>
+                    <form id="myForm1" th:action="@{access/user-manager}" method="get">
+                        <button>Quản lý người dùng</button>
+                    </form>
+                </li>
+                <li onclick="submitForm2()">
+                    <i class='bx bx-book-open bx-lg'></i>
+                    <form id="myForm2" th:action="@{exam/create-exam-page}" method="get">
+                        <button>Tạo đề thi tự do</button>
+                    </form>
+                </li>
+                <li onclick="submitForm3()">
+                    <i class='bx bx-data bx-lg'></i>
+                    <form id="myForm3" th:action="@{exam/view-exams-by-filter-page}" method="get">
+                        <button>Xem các đề thi</button>
+                    </form>
+                </li>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function submitForm1() {
+            document.getElementById("myForm1").submit();
+        }
+        function submitForm2() {
+            document.getElementById("myForm2").submit();
+        }
+        function submitForm3() {
+            document.getElementById("myForm3").submit();
+        }
+    </script>
+
+    <script src="/js/index.js"></script>
+</body>
+
+</html>

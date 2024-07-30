@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" th:debug="true">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TQBEdu | Bài tập</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/style-student.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <!--Sidebar-->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/profile}" method="get">
+                <li><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
+            </form>
+            <form th:action="@{/student/classroom/classrooms-page?}" method="get">
+                <li class="active"><button><i class='bx bx-book-reader'></i>Xem các lớp học</button></li>
+            </form>
+            <form th:action="@{/student/exam/training}" method="get">
+                <li><button><i class='bx bx-folder'></i>Xem các đề thi tự luyện</button></li>
+            </form>
+            <li><button><i class='bx bx-cog'></i>Cài đặt </button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
+        </ul>
+    </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main>
+            <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                <p th:text="${message}"></p>
+            </div>
+
+            <div class="taskbar" style="width: 78%;">
+                <form th:action="@{/student/classroom/assignment}" method="get">
+                    <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+                    <h2><input type="submit" value="Quay lại các bài tập" class="back-button" /></h2>
+                </form>
+                <h2 class="class-code" th:text="'Mã lớp: ' + ${classCode}"></h2>
+            </div><br>
+
+            <table class="assignment-table" style="width: 70%; margin-left: 100px">
+                <tr>
+                    <td class="sample-column">Bài tập</td>
+                    <td><span th:text="${assignment.name}"></span></td>
+                </tr>
+                <tr>
+                    <td class="sample-column">Hạn chót</td>
+                    <td><span th:text="${assignmentDeadline}"></span></td>
+                </tr>
+                <tr>
+                    <td class="sample-column">Thời gian</td>
+                    <td><span th:text="${examDuration} + ' phút'"></span></td>
+                </tr>
+            </table>
+
+            <p th:if="${expired}" class="notification">
+                <i class='bx bx-x-circle'></i>
+                <span>Đã quá thời hạn làm bài !!!</span>
+            </p><br>
+
+            <form id="assignmentForm" action="do-assignment" method="get" style="width: 40%; margin-left: 300px">
+                <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+                <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}" />
+                <input type="submit" id="startExamButton" value="Bắt đầu làm bài" class="start-button" disabled
+                    onclick="return confirm('Bài tập sẽ tính giờ làm bài. Bạn có chắc chắn muốn bắt đầu làm?')" />
+            </form><br>
+
+            <form action="result" method="get">
+                <input type="hidden" id="submissionId" name="submissionId" th:value="${submissionId}">
+                <input type="submit" id="viewResultButton" value="Xem kết quả" class="result-button" disabled>
+            </form>
+
+            <script th:inline="javascript">
+
+                var viewResultButton = document.getElementById("viewResultButton");
+                var startExamButton = document.getElementById("startExamButton");
+
+                var submittedStatus = /*[[${submitted}]]*/ 0;
+                var expiredStatus = /*[[${expired}]]*/ 0;
+
+                if (submittedStatus == 1) {
+                    viewResultButton.removeAttribute("disabled"); // Enable view result button
+                } else {
+                    if (expiredStatus == 0 || submittedStatus == -1)
+                        startExamButton.removeAttribute("disabled"); // Enable start exam button
+                }
+
+                setTimeout(function () {
+                    var messageDiv = document.getElementById("messageDiv");
+                    if (messageDiv) {
+                        messageDiv.style.display = "none";
+                    }
+                }, 2000); // message disapear after 2s
+            </script>
+
+        </main>
+    </div>
+    <script src="/js/index.js"></script>
+</body>
+
+</html>

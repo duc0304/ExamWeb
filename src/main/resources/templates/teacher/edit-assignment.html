@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TQBEdu | Chỉnh sửa bài tập</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/style3.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        a {
+            text-decoration: none;
+        }
+
+        .button-container {
+            display: flex;
+        }
+
+        .button-container button {
+            margin-left: 10px;
+            /* Add some spacing between the input and button */
+        }
+
+        /* Style for the "Exam exists" message (green) */
+        .exists {
+            color: green;
+        }
+
+        /* Style for the "Exam does not exist" message (red) */
+        .not-exists {
+            color: red;
+        }
+    </style>
+
+</head>
+
+<body style="background-color: #f1f5f9;">
+    <!--Sidebar-->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/profile}" method="get">
+                <li><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
+            </form>
+            <form th:action="@{/teacher/classroom/classrooms-page?}" method="get">
+                <li class="active"><button><i class='bx bx-book-reader'></i>Xem các lớp học</button></li>
+            </form>
+            <form th:action="@{/teacher/exam/create-exam-page}" method="get">
+                <li><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
+            </form>
+            <form th:action="@{/teacher/exam/view-exams-by-filter-page}" method="get">
+                <li><button><i class='bx bx-folder'></i>Xem các đề thi</button></li>
+            </form>
+            <li><button><i class='bx bx-cog'></i>Cài đặt</button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
+        </ul>
+    </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content" style="background-color: #f1f5f9;">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main style="background-color: #f1f5f9;">
+            <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                <p th:text="${message}"></p>
+            </div>
+
+            <form th:action="@{view-assignment}" method="get">
+                <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+                <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}" />
+                <h2><input type="submit" value="Quay lại trang trước" class="back-button" /></h2>
+            </form>
+
+            <h2 style="font-size: 30px; color: #96120f; margin-top:20px;">Thay đổi thông tin bài tập</h2>
+
+            <form action="edit-assignment" method="post" class="tuongtac2">
+
+                <div class="form-floating mb-3 mt-3" style="width: 50%;">
+                    <input type="text" class="form-control" id="assignmentName" name="assignmentName"
+                        th:value="${assignment.name}" placeholder="AssignmentName goes here" required />
+                    <label for="assignmentName">Tên bài tập</label>
+                </div>
+                <div class="form-floating mb-3 mt-3" style="width: 30%;">
+                    <input type="datetime-local" class="form-control" id="deadline" name="deadline"
+                        placeholder="Deadline goes here" required />
+                    <label for="deadline">Hạn chót</label>
+                </div>
+                <div class="form-floating mb-3 mt-3" style="width: 20%; display: flex; align-items: center; ">
+                    <input type="text" class="form-control" id="examId" name="examId" th:value="${assignment.examId}"
+                        placeholder="ExamId goes here" required />
+                    <label for="examId">ID Đề</label>
+                    <button type="button" id="checkExamId" style="margin-left: 5%; border: 2px solid #d7d2e9;">Kiểm
+                        tra</button>
+                </div>
+                <p id="examStatus" class=""></p>
+                <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+                <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}" />
+                <button type="submit">Chỉnh sửa</button>
+            </form>
+
+            <div class="tuongtac1" style="margin-bottom: 10px; margin-top: 10px;">
+                <button id="viewExamsButton">Xem các đề hiện có tại đây</button>
+            </div>
+
+            <div class="tuongtac1" style="display: flex; align-items: center;">
+                <label for="createExamButton">Không tìm thấy đề phù hợp? </label>
+                <button style=" margin-left: 5px;" id="createExamButton">Tự tạo đề tại đây</button>
+            </div>
+        </main>
+    </div>
+    <script th:inline="javascript">
+
+        var deadline = /*[[${deadline}]]*/ "";
+        document.getElementById("deadline").value = deadline;
+
+
+        document.getElementById("checkExamId").addEventListener("click", function () {
+            var examId = document.getElementById("examId").value;
+
+            // Implement AJAX to check if the examId exists
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/api/exam/check-exam?examId=" + examId, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var response = xhr.responseText;
+                    var className = response === "Tồn tại bài kiểm tra." ? "exists" : "not-exists";
+                    document.getElementById("examStatus").className = className;
+                    document.getElementById("examStatus").textContent = response;
+                }
+            };
+            xhr.send();
+        });
+
+        document.getElementById("createExamButton").addEventListener("click", function () {
+            var url = "/teacher/exam/create-exam-page";
+            var newTab = window.open(url, '_blank');
+            newTab.focus();
+        });
+
+        document.getElementById("viewExamsButton").addEventListener("click", function () {
+            var url = "/teacher/exam/view-exams-by-filter-page";
+            var newTab = window.open(url, '_blank');
+            newTab.focus();
+        });
+    </script>
+    <script src="/js/index.js"></script>
+</body>
+
+</html>

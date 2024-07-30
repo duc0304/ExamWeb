@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+main {
+    margin: 30px 20px;
+}
+
+h1 {
+    color: #96120f;
+    font-family: 'Roboto';
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 28px;
+    margin: 20px auto 26px auto;
+    text-align:center;
+}
+
+h2 {
+    color: #000;
+    font-family: 'Roboto';
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 28px;
+    margin: 20px auto 26px auto;
+}
+
+h3 {
+    color: #000;
+    font-family: 'Roboto';
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 28px;
+    margin: 20px auto 26px auto;
+    text-align:center;
+}
+
+.left-column {
+    width: 60%;
+    float: left;
+    position: relative;
+}
+
+.right-column {
+    width: 40%;
+    float: right;
+    position: relative;
+}
+
+.container {
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin-top: 225px;
+    transform:translate(-50%,-50%);
+    background-color: #ffffff;
+    width: 70%; 
+    text-align: center;
+    box-sizing: border-box;  
+    border-radius: 30px;
+    border: 2px solid #464646;
+}
+
+
+.tuongtac button {
+    background-color: inherit;
+    color: #000;
+    font-size: 15px;
+    line-height: 20px;    
+    font-weight: 500;
+    border: 2px solid #d7d2e9;
+    padding: 10px 16px;
+    background-color: #fff;
+    width: 100%;
+    text-align: left;
+    border-radius: 4px;
+    display: flex;
+}
+
+.tuongtac button:hover {
+    background-color: #96120f;
+    color: #fff;
+    cursor: pointer;
+}
+
+.tuongtac button:active{
+    background-color: #96120f;
+    color: #fff;
+}
+
+.tuongtac1 button {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    color: #000;
+    font-size: 15px;
+    line-height: 20px;    
+    font-weight: 500;
+    text-align: center;
+    align-items: center;
+    border-radius: 4px;
+    border: 2px solid #d7d2e9;
+    padding: 8px 16px;
+}
+
+.tuongtac1 button:hover {
+    background-color: #2c0f96;
+    color: #fff;
+    cursor: pointer;
+}
+
+.tuongtac1 button:active{
+    background-color: #2c0f96;
+    color: #fff;
+}
+
+.tuongtac2 button{
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    color: #000;
+    font-size: 15px;
+    line-height: 20px;    
+    font-weight: 500;
+    text-align: center;
+    align-items: center;
+    border-radius: 4px;
+    border: 2px solid #d7d2e9;
+    padding: 8px 16px;
+}
+
+.tuongtac2 button:hover{
+    cursor: pointer;
+    background-color: #96120f;
+    color: #fff;
+}
+
+.tuongtac2 button:active{
+    background-color: #96120f;
+    color: #fff;
+}
+
+.back-button {
+    background-color: rgb(150, 3, 3);
+    align-items: center;
+    border-radius: 6px;
+    color: white;
+    display: flex;
+    font-family: 'Roboto';
+    font-size: 14px;
+    font-weight: 500;
+    justify-content: center;
+    line-height: 28px;
+    padding: 8px 12px;
+    text-align: center;
+    border: none;
+    box-shadow: 0 0 5px 1px black;
+}
+
+.back-button:hover {
+    background-color: rgb(176, 54, 54);
+    cursor: pointer;
+}

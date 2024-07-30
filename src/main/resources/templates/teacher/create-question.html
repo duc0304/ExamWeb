@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Create Question</title>
+</head>
+
+<body>
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+
+    <form th:action="@{/user/dashboard}" method="get">
+        <input type="submit" value="Back to main page"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form>
+
+    <h1>Create Question</h1>
+
+    <form th:action="@{create-question}" method="post">
+        <label for="text">Question Text:</label>
+        <input type="text" id="text" name="text" required /><br /><br />
+
+        <div>
+            <label>Question Type:</label>
+            <input type="radio" id="questionType" name="questionType" value="multiple-choice" checked /> Multiple-Choice
+            <input type="radio" id="questionType" name="questionType" value="type-in" /> Type-In
+        </div><br>
+
+        <button type="button" id="add-choice">Add more choice</button>
+
+        <div id="choices-container" style="display: none">
+            <br>Choices:
+        </div>
+
+        <div id="answer-container" style="display: none">
+            <label for="answer">Answer:</label>
+            <input type="text" id="answer" name="answer" required />
+        </div><br>
+
+        <label for="subject">Subject:</label>
+        <select id="subject" name="subject" required>
+            <option value="" disabled selected></option>
+            <option>Toán</option>
+            <option>Lịch Sử</option>
+            <option>Tiếng Anh</option>
+        </select><br><br>
+
+        <label for="grade">Khối lớp</label>
+        <select type="number" id="grade" name="grade" required>
+            <option value="" disabled selected></option>
+            <option>10</option>
+            <option>11</option>
+            <option>12</option>
+        </select><br><br>
+
+        <label for="chapter">Chapter:</label>
+        <select type="text" id="chapter" name="chapter">
+            <!-- <option></option> -->
+        </select><br><br>
+
+        <input type="submit" value="Create Question" />
+    </form>
+
+    <script th:inline="javascript">
+        // JavaScript to add/remove choice input fields
+        const questionTypeRadios = document.querySelectorAll('input[name="questionType"]');
+        const choicesContainer = document.getElementById('choices-container');
+        const answerContainer = document.getElementById('answer-container');
+        const addChoiceButton = document.getElementById('add-choice');
+        const choiceRadio = document.getElementsByName('correctChoice');
+        const choicesInput = document.getElementsByName('choices');
+
+        // Function to handle radio button change
+        function handleQuestionTypeChange() {
+            if (questionTypeRadios[0].checked) {
+                choicesContainer.style.display = 'block';
+                addChoiceButton.style.display = 'block';
+                answerContainer.style.display = 'none';
+                choiceRadio.required = true;
+                choicesInput.required = true;
+            } else {
+                choicesContainer.style.display = 'none';
+                addChoiceButton.style.display = 'none';
+                answerContainer.style.display = 'block';
+                choiceRadio.required = true;
+                choicesInput.required = true;
+            }
+        }
+
+        // Add event listener to radio buttons
+        questionTypeRadios.forEach(function (radio) {
+            radio.addEventListener('change', handleQuestionTypeChange);
+        });
+
+        // Initial state based on the default selected question type
+        handleQuestionTypeChange();
+
+        // 4 choices by default
+        addNewChoice();
+        addNewChoice();
+        addNewChoice();
+        addNewChoice();
+
+        function addNewChoice() {
+            const newChoiceDiv = document.createElement('div');
+            const newChoiceInput = document.createElement('input');
+            newChoiceInput.type = 'text';
+            newChoiceInput.name = 'choices';
+            newChoiceInput.required = true;
+
+            const newRadio = document.createElement('input');
+            newRadio.type = 'radio';
+            newRadio.name = 'correctChoice';
+            newRadio.value = choicesContainer.children.length; // Assign a unique value
+            newRadio.required = true; // Make it required
+            newRadio.addEventListener('change', function () {
+                if (newRadio.checked) {
+                    document.getElementById('answer').value = newChoiceInput.value;
+                }
+            });
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'remove-choice';
+            removeButton.textContent = 'Remove';
+            removeButton.addEventListener('click', function () {
+                newChoiceDiv.remove();
+            });
+
+            newChoiceDiv.appendChild(newRadio);
+            newChoiceDiv.appendChild(newChoiceInput);
+            newChoiceDiv.appendChild(removeButton);
+
+            choicesContainer.appendChild(newChoiceDiv);
+
+        }
+
+        addChoiceButton.addEventListener('click', addNewChoice);
+
+        const subjectDropdown = document.getElementById('subject');
+        const gradeDropdown = document.getElementById('grade');
+        const chapterDropdown = document.getElementById('chapter');
+
+        subjectDropdown.addEventListener('change', updateChapters);
+        gradeDropdown.addEventListener('change', updateChapters);
+
+        function updateChapters() {
+            const selectedSubject = subjectDropdown.value;
+            const selectedGrade = gradeDropdown.value;
+
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        const chapters = JSON.parse(xhr.responseText);
+
+                        // Clear previous options
+                        chapterDropdown.innerHTML = "";
+
+                        // Populate chapter dropdown with received data
+                        chapters.forEach((chapter) => {
+                            const option = document.createElement("option");
+                            option.text = chapter;
+                            option.value = chapter;
+                            chapterDropdown.add(option);
+                        });
+                    } else {
+                        console.error('Request failed with status:', xhr.status);
+                    }
+                }
+            };
+
+            // Prepare and send the request
+            xhr.open('GET', `/api/v1/questions/getChapters?subject=${selectedSubject}&grade=${selectedGrade}`);
+            xhr.send();
+        }
+
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+                messageDiv.parentElement.removeChild(messageDiv);
+            }
+        }, 2000); // message disappears after 2s
+    </script>
+
+    <style>
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .redirect-button {
+            display: inline-block;
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #000000;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</body>
+
+</html>

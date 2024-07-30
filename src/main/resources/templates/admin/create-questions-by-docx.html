@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TQBEdu | Ngân hàng câu hỏi</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!--Sidebar-->
+
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/admin/access/user-manager}" method="get">
+                <li type="submit"><button><i class='bx bx-user-check'></i>Quản lý người dùng</button></li>
+            </form>
+            <form th:action="@{create-question-page}" method="get">
+                <li class="active" type="submit"><button><i class='bx bx-edit'></i>Ngân hàng câu hỏi</button></li>
+            </form>
+            <form th:action="@{/admin/exam/create-exam-page}" method="get">
+                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi tự do</button></li>
+            </form>
+            <form th:action="@{/admin/exam/view-exams-by-filter-page}" method="get">
+                <li type="submit"><button><i class='bx bx-data'></i>Xem các đề thi</button></li>
+            </form>
+            <li type="submit"><button><i class='bx bx-cog'></i>Cài đặt</button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
+        </ul>
+    </div>
+
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main style="background-color: #f1f5f9;">
+
+            <div style="margin-left: 20px;">
+
+                <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                    <p th:text="${message}"></p>
+                </div><br>
+
+                <form th:action="@{create-question-page}" method="get">
+                    <button type="submit" class="back-button">Quay về trang trước</button>
+                </form>
+
+                <div class="container">
+                    <div class="row" style="height: 120vh;">
+                        <div class="col-9">
+
+                            <div class="container">
+                                <div class="row align-items-start">
+                                    <div class="col mb-3 mt-3">
+                                        <h1 style="font-weight: 200px; color: #96120f">Tạo câu hỏi</h1>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container">
+                                <form action="create-multiple-questions" method="post" enctype="multipart/form-data">
+
+                                    <div class="form-container" style="display: flex; gap: 20px;">
+                                        <div class="form-floating mb-3 mt-3" style="width: 20%;">
+                                            <select class="form-select" id="subject" name="subject"
+                                                placeholder="Subject goes here" required>
+                                                <option>Sinh học</option>
+                                                <option>Hóa học</option>
+                                                <option>Tiếng Anh</option>
+                                                <option>Lịch sử</option>
+                                                <option>Địa lý</option>
+                                                <option>Ngữ văn</option>
+                                                <option>Toán</option>
+                                                <option>Vật lý</option>
+                                            </select>
+                                            <label for="subject">Môn học</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3 mt-3" style="width: 10%;">
+                                            <select class="form-select" id="grade" name="grade"
+                                                placeholder="Grade goes here" required>
+                                                <option>10</option>
+                                                <option>11</option>
+                                                <option>12</option>
+                                            </select>
+                                            <label for="grade">Khối lớp</label>
+                                        </div>
+                                    </div>
+
+                                    <label style="margin-top: 10px" for="file">Chọn một file .DOCX:</label>
+                                    <input type="file" id="file" name="file" accept=".docx" required>
+                                    <br><br>
+
+                                    <a target="_blank" style="text-decoration: underline;"
+                                        href="https://docs.google.com/document/d/1ZulEx1fDeh7UtlkXcQz-RAJrU7xP3Tmdc4D7LE_MoDk/edit?usp=sharing">
+                                        Xem định dạng mẫu tại đây</a><br><br>
+
+                                    <div class="tuongtac1">
+                                        <button type="submit">Upload các câu hỏi</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/index.js"></script>
+    <script th:inline="javascript">
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+                messageDiv.parentElement.removeChild(messageDiv);
+            }
+        }, 2000); // message disappears after 2s
+    </script>
+</body>
+
+</html>

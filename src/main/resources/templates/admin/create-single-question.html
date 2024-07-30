@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TQBEdu | Ngân hàng câu hỏi</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!--Sidebar-->
+
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/admin/access/user-manager}" method="get">
+                <li type="submit"><button><i class='bx bx-user-check'></i>Quản lý người dùng</button></li>
+            </form>
+            <form th:action="@{create-question-page}" method="get">
+                <li class="active" type="submit"><button><i class='bx bx-edit'></i>Ngân hàng câu hỏi</button></li>
+            </form>
+            <form th:action="@{/admin/exam/create-exam-page}" method="get">
+                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi tự do</button></li>
+            </form>
+            <form th:action="@{/admin/exam/view-exams-by-filter-page}" method="get">
+                <li type="submit"><button><i class='bx bx-data'></i>Xem các đề thi</button></li>
+            </form>
+            <li type="submit"><button><i class='bx bx-cog'></i>Cài đặt</button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
+        </ul>
+    </div>
+
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main style="background-color: #f1f5f9;">
+
+            <div style="margin-left: 20px;">
+
+                <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                    <p th:text="${message}"></p>
+                </div><br>
+
+                <form th:action="@{create-question-page}" method="get">
+                    <button type="submit" class="back-button">Quay về trang trước</button>
+                </form>
+
+                <div class="container">
+                    <div class="row" style="height: 120vh;">
+                        <div class="col-9">
+
+                            <div class="container">
+                                <div class="row align-items-start">
+                                    <div class="col mb-3 mt-3">
+                                        <h1 style="font-weight: 200px; color: #96120f">Tạo câu hỏi</h1>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container">
+                                <form th:action="@{create-question}" method="post" class="tuongtac2">
+
+                                    <label for="text">Câu hỏi:&nbsp;</label>
+                                    <input type="text" id="text" name="text" style="width: 300px;"
+                                        required /><br /><br />
+
+                                    <div>
+                                        <label>Thể loại:&nbsp;&nbsp;</label>
+                                        <input type="radio" id="questionType" name="questionType"
+                                            value="multiple-choice" checked /> Trắc nghiệm&nbsp;&nbsp;
+                                        <input type="radio" id="questionType" name="questionType" value="type-in" />
+                                        Điền
+                                        đáp án
+                                    </div><br>
+
+                                    <button type="button" id="add-choice">Thêm đáp án</button>
+
+                                    <div id="choices-container" style="display: none">
+                                        <br>Các đáp án:
+                                    </div>
+
+                                    <div id="answer-container" style="display: none">
+                                        <label for="answer">Câu trả lời:&nbsp;</label>
+                                        <input type="text" id="answer" name="answer" required />
+                                    </div><br>
+
+                                    <label for="subject">Môn học:&nbsp;</label>
+                                    <select id="subject" name="subject" required>
+                                        <option value="" disabled selected></option>
+                                        <option>Sinh học</option>
+                                        <option>Hóa học</option>
+                                        <option>Tiếng Anh</option>
+                                        <option>Lịch sử</option>
+                                        <option>Địa lý</option>
+                                        <option>Ngữ văn</option>
+                                        <option>Toán</option>
+                                        <option>Vật lý</option>
+                                    </select><br><br>
+
+                                    <label for="grade">Khối lớp:&nbsp;</label>
+                                    <select type="number" id="grade" name="grade" required>
+                                        <option value="" disabled selected></option>
+                                        <option>10</option>
+                                        <option>11</option>
+                                        <option>12</option>
+                                    </select><br><br>
+
+                                    <label for="chapter">Chương học:&nbsp;</label>
+                                    <select type="text" id="chapter" name="chapter">
+                                        <!-- <option></option> -->
+                                    </select><br><br>
+
+                                    <button type="submit">Tạo câu hỏi</button>
+                                </form><br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/index.js"></script>
+    <script th:inline="javascript">
+        // JavaScript to add/remove choice input fields
+        const questionTypeRadios = document.querySelectorAll('input[name="questionType"]');
+        const choicesContainer = document.getElementById('choices-container');
+        const answerContainer = document.getElementById('answer-container');
+        const addChoiceButton = document.getElementById('add-choice');
+        const choiceRadio = document.getElementsByName('correctChoice');
+        const choicesInput = document.getElementsByName('choices');
+
+        // Function to handle radio button change
+        function handleQuestionTypeChange() {
+            if (questionTypeRadios[0].checked) {
+                choicesContainer.style.display = 'block';
+                addChoiceButton.style.display = 'block';
+                answerContainer.style.display = 'none';
+                addNewChoice();
+                addNewChoice();
+                addNewChoice();
+                addNewChoice();
+                choiceRadio.required = true;
+                choicesInput.required = true;
+            } else {
+                const newChoiceDivsElements = document.getElementsByName('newChoiceDiv');
+                const newChoiceDivsElementsArray = Array.from(newChoiceDivsElements);
+                newChoiceDivsElementsArray.forEach((element) => {
+                    element.remove();
+                });
+                choicesContainer.style.display = 'none';
+                addChoiceButton.style.display = 'none';
+                answerContainer.style.display = 'block';
+                choiceRadio.required = true;
+                choicesInput.required = true;
+            }
+        }
+
+        // Add event listener to radio buttons
+        questionTypeRadios.forEach(function (radio) {
+            radio.addEventListener('change', handleQuestionTypeChange);
+        });
+
+        // Initial state based on the default selected question type
+        handleQuestionTypeChange();
+
+        function addNewChoice() {
+            const newChoiceDiv = document.createElement('div');
+            newChoiceDiv.setAttribute('name', 'newChoiceDiv');
+            const newChoiceInput = document.createElement('input');
+            newChoiceInput.type = 'text';
+            newChoiceInput.name = 'choices';
+            newChoiceInput.required = true;
+            newChoiceInput.style.display = 'inline-block';
+
+            const newRadio = document.createElement('input');
+            newRadio.type = 'radio';
+            newRadio.style.width = '30px';
+            newRadio.style.height = '17px';
+            newRadio.name = 'correctChoice';
+            newRadio.value = choicesContainer.children.length; // Assign a unique value
+            newRadio.required = true; // Make it required
+            newRadio.addEventListener('change', function () {
+                if (newRadio.checked) {
+                    document.getElementById('answer').value = newChoiceInput.value;
+                }
+            });
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.style.display = 'inline-block';
+            removeButton.style.marginTop = '15px';
+            removeButton.style.marginLeft = '15px';
+            removeButton.className = 'remove-choice';
+            removeButton.innerHTML = 'Xóa';
+            removeButton.addEventListener('click', function () {
+                newChoiceDiv.remove();
+            });
+
+            newChoiceDiv.appendChild(newRadio);
+            newChoiceDiv.appendChild(newChoiceInput);
+            newChoiceDiv.appendChild(removeButton);
+
+            choicesContainer.appendChild(newChoiceDiv);
+
+        }
+
+        addChoiceButton.addEventListener('click', addNewChoice);
+
+        const subjectDropdown = document.getElementById('subject');
+        const gradeDropdown = document.getElementById('grade');
+        const chapterDropdown = document.getElementById('chapter');
+
+        subjectDropdown.addEventListener('change', updateChapters);
+        gradeDropdown.addEventListener('change', updateChapters);
+
+        function updateChapters() {
+            const selectedSubject = subjectDropdown.value;
+            const selectedGrade = gradeDropdown.value;
+
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        const chapters = JSON.parse(xhr.responseText);
+
+                        // Clear previous options
+                        chapterDropdown.innerHTML = "";
+
+                        // Populate chapter dropdown with received data
+                        chapters.forEach((chapter) => {
+                            const option = document.createElement("option");
+                            option.text = chapter;
+                            option.value = chapter;
+                            chapterDropdown.add(option);
+                        });
+                    } else {
+                        console.error('Request failed with status:', xhr.status);
+                    }
+                }
+            };
+
+            // Prepare and send the request
+            xhr.open('GET', `/api/v1/questions/getChapters?subject=${selectedSubject}&grade=${selectedGrade}`);
+            xhr.send();
+        }
+
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+                messageDiv.parentElement.removeChild(messageDiv);
+            }
+        }, 2000); // message disappears after 2s
+    </script>
+</body>
+
+</html>

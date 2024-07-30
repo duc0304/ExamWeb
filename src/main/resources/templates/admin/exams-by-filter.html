@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TQBEdu | Các đề thi</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/profile.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <!--Sidebar-->
+
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/admin/access/user-manager}" method="get">
+                <li type="submit"><button><i class='bx bx-user-check'></i>Quản lý người dùng</button></li>
+            </form>
+            <form th:action="@{/admin/questions/create-question-page}" method="get">
+                <li type="submit"><button><i class='bx bx-edit'></i>Ngân hàng câu hỏi</button></li>
+            </form>
+            <form th:action="@{create-exam-page}" method="get">
+                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi tự do</button></li>
+            </form>
+            <form th:action="@{view-exams-by-filter-page}" method="get">
+                <li class="active" type="submit"><button><i class='bx bx-data'></i>Xem các đề thi</button></li>
+            </form>
+            <li type="submit"><button><i class='bx bx-cog'></i>Cài đặt</button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
+        </ul>
+    </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main style="background-color: #f1f5f9;">
+            <div class="container-fluid" style="margin: 30px 20px; ">
+                <form th:action="@{/back-to-dashboard}" method="get">
+                    <button type="submit" class="back-button">Quay lại
+                        trang chủ</button>
+                </form><br><br>
+                <div class="profile-ui">
+                    <div class="profile-information">
+                        <h2 style="color: #96120f;font-size: 30px; margin-right: 5%;">Tìm kiếm đề thi</h2><br>
+                        <form th:action="@{get-exams-by-subject-and-grade}" method="get" class="tuongtac2">
+                            <div style="display: flex;">
+                                <div style="width: 40%; padding: 8px;">
+                                    <div style="margin-bottom: 5px;">
+                                        <label for="subject" style="font-weight: 500;">Môn học</label>
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center">
+                                        <select class="form-select" name="selectedSubject">
+                                            <option th:selected="${selectedSubject == 'Sinh học'}">Sinh học</option>
+                                            <option th:selected="${selectedSubject == 'Hóa học'}">Hóa học</option>
+                                            <option th:selected="${selectedSubject == 'Tiếng Anh'}">Tiếng Anh</option>
+                                            <option th:selected="${selectedSubject == 'Lịch sử'}">Lịch sử</option>
+                                            <option th:selected="${selectedSubject == 'Địa lý'}">Địa lý</option>
+                                            <option th:selected="${selectedSubject == 'Ngữ văn'}">Ngữ văn</option>
+                                            <option th:selected="${selectedSubject == 'Toán'}">Toán</option>
+                                            <option th:selected="${selectedSubject == 'Vật lý'}">Vật lý</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="width: 30%; padding: 8px;">
+                                    <div style="margin-bottom: 5px;">
+                                        <label for="grade" style="font-weight: 500;">Khối lớp:</label>
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center">
+                                        <select class="form-select" name="selectedGrade">
+                                            <!-- <option th:each="grade : ${grades}" th:value="${grade}" th:text="${grade}"
+                                                th:selected="${grade == selectedGrade}">
+                                            </option> -->
+                                            <option th:selected="${selectedGrade == 10}">10</option>
+                                            <option th:selected="${selectedGrade == 11}">11</option>
+                                            <option th:selected="${selectedGrade == 12}">12</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 33px; margin-left: 33px; width: 78px">
+                                    <button type="submit">Tìm đề</button>
+                                </div>
+                            </div><br>
+                        </form>
+
+                        <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                            <p th:text="${message}"></p><br>
+                        </div>
+
+                        <div th:if="${exams}">
+                            <h3 th:text="'Các đề thi hiện có:'"></h3><br>
+                            <ul>
+                                <li th:each="exam : ${exams}">
+                                    <form th:action="@{get-exam-by-examId}">
+                                        <input type="hidden" th:name="examId" th:value="${exam.examId}">
+                                        <input type="hidden" th:name="selectedCode" th:value="0">
+                                        <div style="display: flex;">
+                                            <div style="width: 15%; padding: 8px;">
+                                                <span th:text="${exam.name}"></span>
+                                            </div>
+                                            <div style="width: 80px;">
+                                                <button type="submit">Xem đề</button>
+                                            </div>
+                                        </div><br>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="/js/index.js"></script>
+</body>
+
+</html>

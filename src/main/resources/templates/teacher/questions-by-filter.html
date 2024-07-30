@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Questions from Database</title>
+</head>
+
+<body>
+
+    <form th:action="@{/user/dashboard}" method="get">
+        <input type="submit" value="Back to main page"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form>
+
+    <h1>Questions by Filter</h1>
+
+    <form th:action="@{/get-questions-by-subject-and-difficulty}" method="get">
+        <select name="selectedSubject">
+            <option th:each="subject : ${subjects}" th:value="${subject}" th:text="${subject}"
+                th:selected="${subject == selectedSubject}"></option>
+        </select>
+        <select name="selectedDifficulty">
+            <option th:each="difficulty : ${difficulties}" th:value="${difficulty}" th:text="${difficulty}"
+                th:selected="${difficulty == selectedDifficulty}"></option>
+            <!-- Add more difficulty options as needed -->
+        </select>
+        <input type="submit" value="Filter">
+    </form>
+
+    <!-- Display questions based on the selected subject -->
+    <div th:if="${questions}">
+        <h2 th:text="'Questions in Subject: ' + ${selectedSubject}"></h2>
+        <h3 th:text="'Difficulty: ' + ${selectedDifficulty}"></h3>
+        <ul>
+            <li th:each="question : ${questions}">
+                <p th:text="${question.text}"></p>
+                <!-- Add more properties as needed -->
+            </li>
+        </ul>
+    </div>
+
+</body>
+
+</html>

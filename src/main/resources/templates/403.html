@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>TQBEdu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body style="
+        background-color: rgb(241 245 249);
+        height: 100vh ">
+    <div style="    
+                width: 100%;
+                align-items: center;
+                position: relative;
+                display: flex;
+                align-content: center;
+                justify-content: center;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                align-items: center;
+                top: 100px;
+                ">
+
+        <div style="
+                    display: flex;
+                    align-content: center;
+                    justify-content: center;
+                    flex-wrap: nowrap;
+                    align-items: stretch;
+                    flex-direction: column;
+                    background-color: white;
+                    width: 460px;
+                    background-position: center;
+                    border-radius: 5px;
+                    padding: 20px;
+                    margin: 10px ;
+                    margin-top: 0px;
+                    box-shadow: 0 3px 20px #0000000b;
+                    
+                    ">
+            <form action="/back-to-dashboard" method="get">
+                <div>
+                    <div style="text-align: center; font-size:large; color:#96120f">
+                        <i class='bx bxs-graduation bx-lg'></i>
+                        <h1 style="font-size: 500%">403</h1>
+                        <h2 style="font-size: 200%">FORBIDDEN</h2><br>
+                        <p style="font-size: 150%">Bạn không có quyền truy cập trang này</p><br>
+                    </div>
+                </div>
+                <button style="
+                        background-color: #96120f;
+                        width: 100%;
+                        text-align: center;
+                        color: white;
+                        border-radius: 5px;
+                        margin-top: 10px;
+                        padding: 12px;
+                        font-size: 15px;
+                        border: none;
+                        font-weight: 600;
+                        cursor: pointer;">
+                    Quay lại trang chủ
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
